@@ -6,6 +6,9 @@ class RouteForm(forms.ModelForm):
 	class Meta:
 		model = Route
 		fields = ['name', 'frequency']
+		widget = {
+			'frequency' : forms.CheckboxSelectMultiple()
+		}
 
 class StopForm(forms.ModelForm):
 	class Meta:

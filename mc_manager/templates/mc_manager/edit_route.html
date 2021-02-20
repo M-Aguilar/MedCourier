@@ -1,0 +1,20 @@
+{% extends "mc_manager/base.html" %}
+<!--CSSLINE{% load static %}-->
+
+{% block title %}Edit Route {{route}}{% endblock %}
+
+{% block header %}
+	<div>
+		<h2>Edit Route {{ route }}</h2>
+	</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	<form action="{% url 'edit_route' route.id %}" method='post'>
+		{% csrf_token %}
+		{{ form.as_p }}
+		<button name="submit">Submit Changes</button>
+	</form>
+</div>
+{% endblock %}

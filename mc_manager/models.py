@@ -21,7 +21,10 @@ class Frequency(models.Model):
 	]
 	frequency = models.CharField(max_length=2, choices=DAYS, blank=True)
 
-class Temperatures(models.Model):
+	def __str__(self):
+		return self.get_frequency_display()
+
+class Temperature(models.Model):
 	AMBIENT = 'AMB'
 	REFRIGERATED = 'REF'
 	FROZEN = 'FZN'
@@ -31,7 +34,7 @@ class Temperatures(models.Model):
 		(AMBIENT,'Ambient'),
 		(REFRIGERATED, 'Refrigerated'),
 		(FROZEN, 'Frozen'),
-		(FROZEN_MINUS_70, 'Frozen (-70'),
+		(FROZEN_MINUS_70, 'Frozen (-70)'),
 	]
 	temp = models.CharField(max_length=3, choices=TEMPS, default=AMBIENT)
 
@@ -42,6 +45,13 @@ class Route(models.Model):
 	class Meta:
 		verbose_name_plural = 'routes'
 
+	def __str__(self):
+		return '{0}'.format(self.name)
+
+	@property
+	def freq(self):
+		return self.frequency.all()
+
 class Address(models.Model):
 	street_number = models.IntegerField(blank=True)
 	street = models.CharField(max_length=100, blank=True)
@@ -49,15 +59,20 @@ class Address(models.Model):
 	state = models.CharField(max_length=100, blank=True)
 	postal_code = models.IntegerField(validators=[MaxValueValidator(99999)], blank=True)
 
-	def __str__(self):
-		return '{0} {1} {2}, {3} {4}'.format(street_number, street, city, state, postal_code)
+	@property
+	def gaddr(self):
+		return '{0}+{1}+{2}%2C+{3}+{4}'.format(self.street_number, self.street.replace(' ','+'), self.city, self.state, self.postal_code)
+
+	@property
+	def addr(self):
+		return '{0} {1} {2}, {3} {4}'.format(self.street_number, self.street, self.city, self.state, self.postal_code)
 
 	class Meta:
 		abstract = True
 
 class Location(Address):
 	name = models.CharField(max_length=100, blank=True)
-	phone_number = models.PositiveIntegerField(validators=[MinValueValidator(1111111111)], blank=True)
+	phone_number = models.PositiveIntegerField(validators=[MinValueValidator(1111111111)], blank=True, null=True)
 
 	def phone(self):
 		return '{0}-{1}-{2}'.format(str(self.phone_number)[0:3], str(self.phone_number)[3:6], str(self.phone_number[6:]))

@@ -1,0 +1,19 @@
+{% extends "mc_manager/base.html" %}
+<!--CSSLINE{% load static %}-->
+
+{% block title %}{{location}}{% endblock %}
+
+{% block header %}
+	<div>
+		<h2>{{location}}</h2>
+	</div>
+	<div>
+		<a href="{% url 'edit_location' location.id %}">Edit Location</a>
+	</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	<a href="https://www.google.com/maps/dir/?api=1&destination={{location.gaddr}}">{{location.addr}}</a>
+</div>
+{% endblock %}

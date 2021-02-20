@@ -1,0 +1,23 @@
+{% extends "mc_manager/base.html" %}
+<!--CSSLINE{% load static %}-->
+
+{% block title %}Locations{% endblock %}
+
+{% block header %}
+	<div>
+		<h2>Locations</h2>
+	</div>
+	<div>
+		<a href="{% url 'new_location' %}">Add Location</a>
+	</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	{% for location in locations %}
+		<a href="{% url 'location' location.id %}">{{ location }}</p>
+	{% empty %}
+		<p>Nothing Here</p> 
+	{% endfor %}
+</div>
+{% endblock %}
